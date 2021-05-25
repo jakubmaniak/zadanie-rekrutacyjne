@@ -1,0 +1,19 @@
+.subTitle {
+    font-size: 16px;
+    font-weight: 500;
+    color: #606060;
+}
+
+.subTitle > p {
+    margin-bottom: 0;
+}
+
+.extra {
+    font-size: 20px;
+    color: #404040;
+    margin: 0;
+}
+
+.extra > p {
+    margin-bottom: 0;
+}
