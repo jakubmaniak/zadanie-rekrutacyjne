@@ -1,13 +1,14 @@
 import React from 'react';
-import { Counter } from './features/counter/Counter';
 import './App.css';
+import 'antd/dist/antd.css';
+import Layout from 'antd/lib/layout/layout';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <Counter />
-      </header>
+      <div className="App-container">
+        <Layout style={{ padding: '16px 24px' }}></Layout>
+      </div>
     </div>
   );
 }
