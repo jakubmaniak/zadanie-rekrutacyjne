@@ -1,0 +1,26 @@
+.hallGrid {
+    display: grid;
+    gap: 8px;
+}
+
+.seat,
+.reservedSeat,
+.selectedSeat {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #202020;
+}
+
+.seat,
+.selectedSeat {
+    cursor: pointer;
+}
+
+.reservedSeat {
+    background-color: #404040;
+    cursor: not-allowed;
+}
+
+.selectedSeat {
+    background-color: #f08020;
+}
