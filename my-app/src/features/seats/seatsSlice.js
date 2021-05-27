@@ -12,9 +12,7 @@ const initialState = {
     selectedSeatIds: []
 };
 
-export const getSeatsAsync = createAsyncThunk('seats/fetchAllSeats', async() => {
-    return await fetchSeats();
-});
+export const getSeatsAsync = createAsyncThunk('seats/fetchAllSeats', fetchSeats);
 
 export const seatsSlice = createSlice({
     name: 'seats',
