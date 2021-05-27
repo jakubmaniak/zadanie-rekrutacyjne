@@ -2,7 +2,7 @@ import styles from './ReservationSeats.module.css'
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from 'antd';
+import { Button, Skeleton } from 'antd';
 
 import {
     getSeatsAsync,
@@ -11,6 +11,7 @@ import {
     selectHallHeight,
     selectHallWidth,
     selectSelectedSeatIds,
+    selectFetchingSeats,
     selectSeat,
     unselectSeat
 } from '../seats/seatsSlice';
@@ -19,6 +20,7 @@ import { navigateTo } from '../navigation/navigationSlice';
 
 export default function ReservationSeats() {
     const dispatch = useDispatch();
+    const loading = useSelector(selectFetchingSeats);
     const reservationDetails = useSelector(selectReservationDetails);
     const allSeats = useSelector(selectAllSeats);
     const selectedSeatIds = useSelector(selectSelectedSeatIds);
@@ -100,21 +102,49 @@ export default function ReservationSeats() {
         return null;
     }
 
+    function renderSeatSkeletons() {
+        let skeletons = [];
+
+        for (let y = 0; y < 8; y++) {
+            for (let x = 0; x < 15; x++) {
+                if (Math.random() > 0.5) {
+                  continue;  
+                }
+
+                skeletons.push(
+                    <div style={{ gridArea: `${y + 1} / ${x + 1}` }}>
+                        <Skeleton.Avatar shape="square" active={true}/>
+                    </div>
+                );
+            }
+        }
+
+        return skeletons;
+    }
+    
+    function renderSeats() {
+        if (loading) {
+            return renderSeatSkeletons();
+        }
+
+        return allSeats.map((seat) => {
+            return <div
+                key={seat.id}
+                className={seat.reserved ? styles.reservedSeat : isSeatSelected(seat.id) ? styles.selectedSeat : styles.seat}
+                style={{ gridArea: `${seat.cords.x + 1} / ${seat.cords.y + 1}` }}
+                onClick={() => toggleSeatSelection(seat.cords.x, seat.cords.y)}
+            ></div>;
+        });
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.hallGrid} style={{
                 gridTemplateColumns: `repeat(${hallHeight}, 1fr)`,
                 gridTemplateRows: `repeat(${hallWidth}, 1fr)`
-            }}>
-                {allSeats.map((seat) => {
-                    return <div
-                        key={seat.id}
-                        className={seat.reserved ? styles.reservedSeat : isSeatSelected(seat.id) ? styles.selectedSeat : styles.seat}
-                        style={{ gridArea: `${seat.cords.x + 1} / ${seat.cords.y + 1}` }}
-                        onClick={() => toggleSeatSelection(seat.cords.x, seat.cords.y)}
-                    ></div>;
-                })}
-            </div>
+            }}>{
+                renderSeats()
+            }</div>
             <div className={styles.footer}>
                 <ol className={styles.legend}>
                     <li>

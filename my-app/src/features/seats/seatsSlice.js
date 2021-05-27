@@ -9,7 +9,8 @@ const initialState = {
     hallWidth: 0,
     hallHeight: 0,
     allSeats: [],
-    selectedSeatIds: []
+    selectedSeatIds: [],
+    fetchingSeats: false
 };
 
 export const getSeatsAsync = createAsyncThunk('seats/fetchAllSeats', fetchSeats);
@@ -44,6 +45,9 @@ export const seatsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(getSeatsAsync.pending, (state) => {
+                state.fetchingSeats = true;
+            })
             .addCase(getSeatsAsync.fulfilled, (state, action) => {
                 let seats = action.payload;
                 state.allSeats = seats;
@@ -53,6 +57,8 @@ export const seatsSlice = createSlice({
 
                 state.hallWidth = Math.max(...xs) + 1;
                 state.hallHeight = Math.max(...ys) + 1;
+
+                state.fetchingSeats = false;
             });
     }
 });
@@ -67,6 +73,7 @@ export const selectSelectedSeats = (state) => {
         return state.seats.allSeats.find((seat) => seat.id === id);
     });
 };
+export const selectFetchingSeats = (state) => state.seats.fetchingSeats;
 
 
 
