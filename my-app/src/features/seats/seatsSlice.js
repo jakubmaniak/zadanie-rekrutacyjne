@@ -57,6 +57,7 @@ export const seatsSlice = createSlice({
     }
 });
 
+export const selectReservationDetails = (state) => state.seats.reservationDetails;
 export const selectHallWidth = (state) => state.seats.hallWidth;
 export const selectHallHeight = (state) => state.seats.hallHeight;
 export const selectAllSeats = (state) => state.seats.allSeats;

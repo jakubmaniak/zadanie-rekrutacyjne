@@ -6,18 +6,20 @@ import { Button } from 'antd';
 
 import {
     getSeatsAsync,
+    selectReservationDetails,
     selectAllSeats,
     selectHallHeight,
     selectHallWidth,
     selectSelectedSeatIds,
     selectSeat,
-    unselectSeat,
+    unselectSeat
 } from '../seats/seatsSlice';
 import { navigateTo } from '../navigation/navigationSlice';
 
 
 export default function ReservationSeats() {
     const dispatch = useDispatch();
+    const reservationDetails = useSelector(selectReservationDetails);
     const allSeats = useSelector(selectAllSeats);
     const selectedSeatIds = useSelector(selectSelectedSeatIds);
     const hallWidth = useSelector(selectHallWidth);
@@ -26,6 +28,14 @@ export default function ReservationSeats() {
     useEffect(() => {
         dispatch(getSeatsAsync());
     }, []);
+
+    useEffect(() => {
+        let { seatCount, nextTo } = reservationDetails;
+        
+        if (nextTo) {
+            selectSeatsNextToEachOther(seatCount);
+        }
+    }, [allSeats]);
 
     function handleSubmit() {
         dispatch(navigateTo('success'));
@@ -48,6 +58,46 @@ export default function ReservationSeats() {
         else {
             dispatch(selectSeat(targetSeat.id));
         }
+    }
+
+    function selectSeatsNextToEachOther(count) {
+        let seats = findSeatsNextToEachOther(count);
+        if (seats === null) {
+            return;
+        }
+
+        for (let seat of seats) {
+            dispatch(selectSeat(seat.id));
+        }
+    }
+
+    function findSeatsNextToEachOther(count) {
+        let previousSeat = null;
+        let stack = [];
+
+        let sortByRows = (a, b) => (a.cords.x - b.cords.x) || (a.cords.y - b.cords.y);
+        let seats = [...allSeats].sort(sortByRows);
+
+        let isPreviousSeatNextTo = (seat) => {
+            return (previousSeat.cords.x == seat.cords.x && previousSeat.cords.y == seat.cords.y - 1);
+        }
+
+        for (let seat of seats) {
+            if (!seat.reserved && (previousSeat == null || isPreviousSeatNextTo(seat))) {
+                stack.push(seat);
+
+                if (stack.length == count) {
+                    return stack;
+                }
+            }
+            else {
+                stack = [seat];
+            }
+
+            previousSeat = seat;
+        }
+        
+        return null;
     }
 
     return (
