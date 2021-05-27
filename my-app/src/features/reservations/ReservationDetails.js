@@ -4,12 +4,14 @@ import { useDispatch } from 'react-redux';
 import { Button, Checkbox, Form, InputNumber } from 'antd';
 
 import { navigateTo } from '../navigation/navigationSlice';
+import { setReservationDetails } from '../seats/seatsSlice';
 
 
 export default function ReservationDetails() {
     const dispatch = useDispatch();
     
     function handleSubmit(formData) {
+        dispatch(setReservationDetails(formData));
         dispatch(navigateTo('seats'));
     }
 

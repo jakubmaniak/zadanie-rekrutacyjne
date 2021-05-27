@@ -18,6 +18,10 @@ export const seatsSlice = createSlice({
     name: 'seats',
     initialState,
     reducers: {
+        setReservationDetails: (state, action) => {
+            let { seatCount, nextTo } = action.payload;
+            state.reservationDetails = { seatCount, nextTo };
+        },
         selectSeat: (state, action) => {
             if (state.selectedSeatIds.length >= state.reservationDetails.seatCount) {
                 return;
@@ -41,7 +45,6 @@ export const seatsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getSeatsAsync.fulfilled, (state, action) => {
-                console.log('fulfilled');
                 let seats = action.payload;
                 state.allSeats = seats;
 
@@ -66,5 +69,5 @@ export const selectSelectedSeats = (state) => {
 
 
 
-export const { selectSeat, unselectSeat } = seatsSlice.actions;
+export const { setReservationDetails, selectSeat, unselectSeat } = seatsSlice.actions;
 export default seatsSlice.reducer;
