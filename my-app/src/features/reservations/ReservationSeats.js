@@ -11,6 +11,7 @@ import {
     selectSeat,
     unselectSeat,
 } from '../seats/seatsSlice';
+import { Button } from 'antd';
 
 export default function ReservationSeats() {
     const dispatch = useDispatch();
@@ -43,18 +44,37 @@ export default function ReservationSeats() {
     }
 
     return (
-        <div className={styles.hallGrid} style={{
-            gridTemplateColumns: `repeat(${hallHeight}, 1fr)`,
-            gridTemplateRows: `repeat(${hallWidth}, 1fr)`
-        }}>
-            {allSeats.map((seat) => {
-                return <div
-                    key={seat.id}
-                    className={seat.reserved ? styles.reservedSeat : isSeatSelected(seat.id) ? styles.selectedSeat : styles.seat}
-                    style={{ gridArea: `${seat.cords.x + 1} / ${seat.cords.y + 1}` }}
-                    onClick={() => toggleSeatSelection(seat.cords.x, seat.cords.y)}
-                ></div>;
-            })}
+        <div className={styles.container}>
+            <div className={styles.hallGrid} style={{
+                gridTemplateColumns: `repeat(${hallHeight}, 1fr)`,
+                gridTemplateRows: `repeat(${hallWidth}, 1fr)`
+            }}>
+                {allSeats.map((seat) => {
+                    return <div
+                        key={seat.id}
+                        className={seat.reserved ? styles.reservedSeat : isSeatSelected(seat.id) ? styles.selectedSeat : styles.seat}
+                        style={{ gridArea: `${seat.cords.x + 1} / ${seat.cords.y + 1}` }}
+                        onClick={() => toggleSeatSelection(seat.cords.x, seat.cords.y)}
+                    ></div>;
+                })}
+            </div>
+            <div className={styles.footer}>
+                <ol className={styles.legend}>
+                    <li>
+                        <div className={styles.seat} />
+                        <span>Miejsce dostępne</span>
+                    </li>
+                    <li>
+                        <div className={styles.reservedSeat} />
+                        <span>Miejsce zarezerwowane</span>
+                    </li>
+                    <li>
+                        <div className={styles.selectedSeat} />
+                        <span>Twój wybór</span>
+                    </li>
+                </ol>
+                <Button>Rezerwuj</Button>
+            </div>
         </div>
     );
 }
