@@ -54,10 +54,15 @@ export const seatsSlice = createSlice({
     }
 });
 
-export const selectAllSeats = (state) => state.seats.allSeats;
-export const selectSelectedSeatIds = (state) => state.seats.selectedSeatIds;
 export const selectHallWidth = (state) => state.seats.hallWidth;
 export const selectHallHeight = (state) => state.seats.hallHeight;
+export const selectAllSeats = (state) => state.seats.allSeats;
+export const selectSelectedSeatIds = (state) => state.seats.selectedSeatIds;
+export const selectSelectedSeats = (state) => {
+    return state.seats.selectedSeatIds.map((id) => {
+        return state.seats.allSeats.find((seat) => seat.id === id);
+    });
+};
 
 
 
