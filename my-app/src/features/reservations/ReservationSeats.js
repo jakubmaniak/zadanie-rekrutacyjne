@@ -1,72 +1,56 @@
 import styles from './ReservationSeats.module.css'
 
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    getSeatsAsync,
+    selectAllSeats,
+    selectHallHeight,
+    selectHallWidth,
+    selectSelectedSeatIds,
+    selectSeat,
+    unselectSeat,
+} from '../seats/seatsSlice';
 
 export default function ReservationSeats() {
-    const [seats, setSeats] = useState([]);
-    const [width, setWidth] = useState(0);
-    const [height, setHeight] = useState(0);
-    const [selectedSeats, setSelectedSeats] = useState([]);
+    const dispatch = useDispatch();
+    const allSeats = useSelector(selectAllSeats);
+    const selectedSeatIds = useSelector(selectSelectedSeatIds);
+    const hallWidth = useSelector(selectHallWidth);
+    const hallHeight = useSelector(selectHallHeight);
 
     useEffect(() => {
-        fetch('http://localhost:3000/seats')
-        .then((response) => response.json())
-        .then((seats) => {
-            setSeats(seats);
-            setWidth(getHallWidth(seats));
-            setHeight(getHallHeight(seats));
-        });
+        dispatch(getSeatsAsync());
     }, []);
 
-    function getHallWidth(seats) {
-        let xs = new Set(seats.map((seat) => seat.cords.x));
-        return Math.max(...xs) + 1;
-    }
-
-    function getHallHeight(seats) {
-        let ys = new Set(seats.map((seat) => seat.cords.y));
-        return Math.max(...ys) + 1;
-    }
-
-    function isSeatSelected(seatIndex) {
-        return (selectedSeats.indexOf(seats[seatIndex]) != -1);
+    function isSeatSelected(seatId) {
+        return (selectedSeatIds.indexOf(seatId) != -1);
     }
 
     function toggleSeatSelection(x, y) {
-        let seatIndex = seats.findIndex((seat) => seat.cords.x === x && seat.cords.y === y);
+        let targetSeat = allSeats.find((seat) => seat.cords.x === x && seat.cords.y === y);
         
-        if (seatIndex == -1 || seats[seatIndex].reserved) {
+        if (targetSeat === null || targetSeat.reserved) {
             return;
         }
 
-        if (isSeatSelected(seatIndex)) {
-            unselectSeat(seatIndex);
+        if (isSeatSelected(targetSeat.id)) {
+            dispatch(unselectSeat(targetSeat.id));
         }
         else {
-            selectSeat(seatIndex);
+            dispatch(selectSeat(targetSeat.id));
         }
-    }
-
-    function selectSeat(seatIndex) {
-        setSelectedSeats((selectedSeats) => [...selectedSeats, seats[seatIndex]]);
-    }
-
-    function unselectSeat(seatIndex) {
-        let newSeats = [...selectedSeats];
-        newSeats.splice(selectedSeats.indexOf(seats[seatIndex]), 1);
-
-        setSelectedSeats(newSeats);
     }
 
     return (
         <div className={styles.hallGrid} style={{
-            gridTemplateColumns: `repeat(${height}, 1fr)`,
-            gridTemplateRows: `repeat(${width}, 1fr)`
+            gridTemplateColumns: `repeat(${hallHeight}, 1fr)`,
+            gridTemplateRows: `repeat(${hallWidth}, 1fr)`
         }}>
-            {seats.map((seat, seatIndex) => {
+            {allSeats.map((seat) => {
                 return <div
                     key={seat.id}
-                    className={seat.reserved ? styles.reservedSeat : isSeatSelected(seatIndex) ? styles.selectedSeat : styles.seat}
+                    className={seat.reserved ? styles.reservedSeat : isSeatSelected(seat.id) ? styles.selectedSeat : styles.seat}
                     style={{ gridArea: `${seat.cords.x + 1} / ${seat.cords.y + 1}` }}
                     onClick={() => toggleSeatSelection(seat.cords.x, seat.cords.y)}
                 ></div>;
