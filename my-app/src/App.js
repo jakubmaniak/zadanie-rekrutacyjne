@@ -5,9 +5,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Layout from 'antd/lib/layout/layout';
 
-import ReservationDetails from './features/reservations/ReservationDetails';
-import ReservationSeats from './features/reservations/ReservationSeats';
-import ReservationSuccess from './features/reservations/ReservationSuccess';
+import ReservationDetails from './components/reservation/ReservationDetails';
+import ReservationSeats from './components/reservation/ReservationSeats';
+import ReservationSuccess from './components/reservation/ReservationSuccess';
 import { selectCurrentPage } from './features/navigation/navigationSlice';
 
 

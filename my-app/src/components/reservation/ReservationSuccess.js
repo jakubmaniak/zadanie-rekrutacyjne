@@ -3,7 +3,7 @@ import styles from './ReservationSuccess.module.css';
 import { useSelector } from 'react-redux';
 import { Result } from 'antd';
 
-import { selectSelectedSeats } from '../seats/seatsSlice';
+import { selectSelectedSeats } from '../../features/seats/seatsSlice';
 
 
 export default function ReservationSuccess() {

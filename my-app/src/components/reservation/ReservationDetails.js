@@ -3,8 +3,8 @@ import styles from './ReservationDetails.module.css'
 import { useDispatch } from 'react-redux';
 import { Button, Checkbox, Form, InputNumber } from 'antd';
 
-import { navigateTo } from '../navigation/navigationSlice';
-import { setReservationDetails } from '../seats/seatsSlice';
+import { navigateTo } from '../../features/navigation/navigationSlice';
+import { setReservationDetails } from '../../features/seats/seatsSlice';
 
 
 export default function ReservationDetails() {

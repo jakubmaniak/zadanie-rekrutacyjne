@@ -14,8 +14,8 @@ import {
     selectFetchingSeats,
     selectSeat,
     unselectSeat
-} from '../seats/seatsSlice';
-import { navigateTo } from '../navigation/navigationSlice';
+} from '../../features/seats/seatsSlice';
+import { navigateTo } from '../../features/navigation/navigationSlice';
 
 
 export default function ReservationSeats() {
