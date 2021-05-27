@@ -1,12 +1,22 @@
 import styles from './ReservationDetails.module.css'
 
+import { useDispatch } from 'react-redux';
 import { Button, Checkbox, Form, InputNumber } from 'antd';
 
+import { navigateTo } from '../navigation/navigationSlice';
+
+
 export default function ReservationDetails() {
+    const dispatch = useDispatch();
+    
+    function handleSubmit(formData) {
+        dispatch(navigateTo('seats'));
+    }
+
     return (
         <Form
             className={styles.form}
-            onFinish={(data) => alert(JSON.stringify(data))}
+            onFinish={handleSubmit}
             initialValues={{ nextTo: true }}
             wrapperCol={{ span: 24 }}
             labelCol={{ span: 12 }}

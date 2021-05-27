@@ -2,6 +2,8 @@ import styles from './ReservationSeats.module.css'
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button } from 'antd';
+
 import {
     getSeatsAsync,
     selectAllSeats,
@@ -11,7 +13,8 @@ import {
     selectSeat,
     unselectSeat,
 } from '../seats/seatsSlice';
-import { Button } from 'antd';
+import { navigateTo } from '../navigation/navigationSlice';
+
 
 export default function ReservationSeats() {
     const dispatch = useDispatch();
@@ -23,6 +26,10 @@ export default function ReservationSeats() {
     useEffect(() => {
         dispatch(getSeatsAsync());
     }, []);
+
+    function handleSubmit() {
+        dispatch(navigateTo('success'));
+    }
 
     function isSeatSelected(seatId) {
         return (selectedSeatIds.indexOf(seatId) != -1);
@@ -73,7 +80,7 @@ export default function ReservationSeats() {
                         <span>Twój wybór</span>
                     </li>
                 </ol>
-                <Button>Rezerwuj</Button>
+                <Button type="primary" onClick={handleSubmit}>Rezerwuj</Button>
             </div>
         </div>
     );
